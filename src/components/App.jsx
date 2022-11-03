@@ -5,10 +5,24 @@ import ContactForm from './Form/Form';
 import ContactList from './Contacts/Contacts';
 import Filter from './Filter/Filter';
 
+const LS_KEY = 'contacts';
+
 export class App extends React.Component {
   state = {
     contacts: [],
     filter: '',
+  };
+  componentDidMount = () => {
+    const savedContacts = JSON.parse(localStorage.getItem(LS_KEY));
+    if (savedContacts) {
+      this.setState({ contacts: savedContacts });
+    }
+  };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
+    }
   };
 
   submitHandler = (values, { resetForm }) => {
